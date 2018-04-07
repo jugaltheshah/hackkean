@@ -45,7 +45,7 @@ app.post('/', async (req, res) => {
     });
 });
 
-async function getBase64Image(url){
+function getBase64Image(url){
     return new Promise((resolve, reject) => {
       https.get(url, (resp) => {
           if (resp.statusCode < 200 || resp.statusCode > 299) {
