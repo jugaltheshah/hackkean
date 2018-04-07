@@ -20,29 +20,16 @@ app.post('/', async (req, res) => {
 
     // Download image in base64 encoded string format
     console.log('Getting base64 image');
-    getBase64Image(imageUrl).then((base64Image) => {
-      // Send base64 string to Truface to see if it recognizes me
-      console.log('Sending base64 image to TrueFace to check match');
+    const base64Image = await getBase64Image(imageUrl);
 
-      checkIfMatch(process.env.TRUEFACE_API_KEY, base64Image).then((resp) => {
-        console.log('Handling return from TrueFace');
-        
-        // Send SMS with image if it's me
-        if(resp.success && resp.data[0].emb0_match){
-          console.log('Sending SMS');
+    console.log('Checking if image is a match');
+    const faceRecognized = await checkIfMatch(base64Image).then(resp => (resp.success && resp.data[0].emb0_match));
 
-          sendSMS(twilio, imageUrl, caption).then(message => {
-            console.log('SMS sent successfully');
-          }).catch((e) => {
-            console.log('Error sending SMS:',e);
-          });
-        } else {
-          console.log('Either TrueFace was not successful or picture was not a match. Finishing.');
-        }
-      })
-    }).catch((err) => {
-      console.log('Error:',err);
-    });
+
+    if(faceRecognized){
+        console.log('Match was found, sending image as SMS');
+        sendSMS(imageUrl, caption);
+    }
 });
 
 async function getBase64Image(url){
@@ -62,12 +49,12 @@ async function getBase64Image(url){
     });
 }
 
-function checkIfMatch(tf_api_key, base64Image){
+async function checkIfMatch(base64Image){
   var options = {
       method: 'POST',
       uri: 'https://api.chui.ai/v1/match',
       headers: {
-          'x-api-key': tf_api_key,
+          'x-api-key': process.env.TRUEFACE_API_KEY,
           'Content-Type': 'application/json',
       },        
       body: {
@@ -82,8 +69,8 @@ function checkIfMatch(tf_api_key, base64Image){
   });
 }
 
-function sendSMS(client, imageUrl, caption){
-  return client.messages
+async function sendSMS(imageUrl, caption){
+  return twilio.messages
     .create({
       body: caption,
       to: '+17326410608',
