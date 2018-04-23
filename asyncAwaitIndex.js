@@ -73,7 +73,7 @@ async function sendSMS(imageUrl, caption){
   return twilio.messages
     .create({
       body: caption,
-      to: '+17326410608',
+      to: `${process.env.DEST_NUM}`,
       from: '+12019480335',
       mediaUrl: imageUrl,
     });
