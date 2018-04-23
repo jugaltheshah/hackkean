@@ -8,7 +8,12 @@ This is an IFTTT webhook endpoint that runs every new Instagram post through the
 2) TrueFace API key
 3) Twilio API key
 
+## Entry point
+
+Look at index.js (or asyncAwaitIndex.js for async/await version) - this is the webhook logic.
+
 ## Hosting
 
 Given the myriad possibilities for hosting, it is out of the scope of this document. Some free possibilities though are Webtask.io & Heroku. You would take the public URL given by those services and create an IFTTT webhook.
+
 
