@@ -24,7 +24,7 @@ app.post('/', async (req, res) => {
       // Send base64 string to Truface to see if it recognizes me
       console.log('Sending base64 image to TrueFace to check match');
 
-      checkIfMatch(process.env.TRUEFACE_API_KEY, base64Image).then((resp) => {
+      checkIfMatch(base64Image).then((resp) => {
         console.log('Handling return from TrueFace');
         
         // Send SMS with image if it's me
@@ -49,7 +49,7 @@ function getBase64Image(url){
     return new Promise((resolve, reject) => {
       https.get(url, (resp) => {
           if (resp.statusCode < 200 || resp.statusCode > 299) {
-            reject(new Error('Failed to load page, status code: ' + resp.statusCode));
+            reject(new Error('Unexpected response from Instagram, status code: ' + resp.statusCode));
           }
           resp.setEncoding('base64');
           resp.on('data', (data) => { body += data});
@@ -57,17 +57,17 @@ function getBase64Image(url){
               resolve(body);
           });
       }).on('error', (e) => {
-          reject(new Error('Failed to load page, status code: ' + response.statusCode));
+          reject(new Error('Error getting response from Instagram: ' + e));
       });
     });
 }
 
-function checkIfMatch(tf_api_key, base64Image){
+function checkIfMatch(base64Image){
   var options = {
       method: 'POST',
       uri: 'https://api.chui.ai/v1/match',
       headers: {
-          'x-api-key': tf_api_key,
+          'x-api-key': process.env.TRUEFACE_API_KEY,
           'Content-Type': 'application/json',
       },        
       body: {
@@ -86,7 +86,7 @@ function sendSMS(client, imageUrl, caption){
   return client.messages
     .create({
       body: caption,
-      to: '+17326410608',
+      to: `+${process.env.DEST_NUM}`,
       from: '+12019480335',
       mediaUrl: imageUrl,
     });

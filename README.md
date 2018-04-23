@@ -1,39 +1,14 @@
-# node-js-getting-started
+# Hack Kean Demo
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
+This is an IFTTT webhook endpoint that runs every new Instagram post through the TrueFace facial recognition API. If my face is recognized in an image, it sends the image off as an MMS using the Twilio API.
 
-This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
+## Prerequesites
 
-## Running Locally
+1) An IFTTT webhook that fires off a POST event for every Instagram picture
+2) TrueFace API key
+3) Twilio API key
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku CLI](https://cli.heroku.com/) installed.
+## Hosting
 
-```sh
-$ git clone git@github.com:heroku/node-js-getting-started.git # or clone your own fork
-$ cd node-js-getting-started
-$ npm install
-$ npm start
-```
+Given the myriad possibilities for hosting, it is out of the scope of this document. Some free possibilities though are Webtask.io & Heroku. You would take the public URL given by those services and create an IFTTT webhook.
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
-
-## Deploying to Heroku
-
-```
-$ heroku create
-$ git push heroku master
-$ heroku open
-```
-or
-
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-## Documentation
-
-For more information about using Node.js on Heroku, see these Dev Center articles:
-
-- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
